@@ -18,7 +18,7 @@ public class Library {
     private String name;
     private List<Book> books;
     private List<Customer> customers;
-    private List<Loan> loans;
+    private List<Lend> lends;
 
     public Book getBookByIsbn(String isbn) throws BookNotFoundException {
         return books.stream()
@@ -42,22 +42,14 @@ public class Library {
         throw new MemberNotFoundException(nif);
     }
 
-    public Boolean giveLoan(String isbn, String nif) throws BookNotFoundException, MemberNotFoundException {
+    public Boolean existLend(String isbn, String nif) throws BookNotFoundException, MemberNotFoundException {
         Book book = getBookByIsbn(isbn);
-        if (book == null) {
-            throw new BookNotFoundException(isbn);
-        } else {
-            Customer customer = getCustomerByNif(nif);
-            if (customer == null) {
-                throw new MemberNotFoundException(nif);
-            } else {
-                for (Loan loan : loans) {
-                    if (loan.getIsbn().equals(isbn) && loan.getNif().equals(nif)) {
-                        return true;
-                    }
-                }
-                return false;
+        Customer customer = getCustomerByNif(nif);
+        for (Lend lend : lends) {
+            if (lend.getIsbn().equals(isbn) && lend.getNif().equals(nif)) {
+                return true;
             }
         }
+        return false;
     }
 }
