@@ -13,4 +13,5 @@ public class Lend {
     private String isbn;
     private Date loanDate;
     private String nif;
+    private Date returnDate;
 }

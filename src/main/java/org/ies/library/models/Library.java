@@ -17,7 +17,7 @@ public class Library {
     private final static Logger log = LoggerFactory.getLogger(Library.class);
     private String name;
     private List<Book> books;
-    private List<Customer> customers;
+    private List<Member> members;
     private List<Lend> lends;
 
     public Book getBookByIsbn(String isbn) throws BookNotFoundException {
@@ -33,10 +33,10 @@ public class Library {
 //        throw new BookNotFoundException(isbn);
     }
 
-    public Customer getCustomerByNif(String nif) throws MemberNotFoundException {
-        for (Customer customer : customers) {
-            if (customer.getNif().equals(nif)) {
-                return customer;
+    public Member getMemberByNif(String nif) throws MemberNotFoundException {
+        for (Member member : members) {
+            if (member.getNif().equals(nif)) {
+                return member;
             }
         }
         throw new MemberNotFoundException(nif);
@@ -44,12 +44,17 @@ public class Library {
 
     public Boolean existLend(String isbn, String nif) throws BookNotFoundException, MemberNotFoundException {
         Book book = getBookByIsbn(isbn);
-        Customer customer = getCustomerByNif(nif);
-        for (Lend lend : lends) {
-            if (lend.getIsbn().equals(isbn) && lend.getNif().equals(nif)) {
-                return true;
-            }
-        }
-        return false;
+        Member member = getMemberByNif(nif);
+        return lends.stream()
+                .filter(lend -> lend.getIsbn().equals(isbn) && lend.getNif().equals(nif))
+                .findFirst()
+                .isPresent();
+
+//        for (Lend lend : lends) {
+//            if (lend.getIsbn().equals(isbn) && lend.getNif().equals(nif)) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 }
